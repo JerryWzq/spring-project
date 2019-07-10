@@ -5,6 +5,16 @@ spring:
     url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
+  # thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: utf-8
+    mode: HTML5
+    servlet:
+      content-type: text/html
+    cache: false
 
 ######################### Druid连接池的配置信息  #################
 spring.druid.initialSize: 5                                 #初始化连接大小
@@ -29,3 +39,16 @@ mybatis:
   type-aliases-package: com.wzq.model
   configuration:
     map-underscore-to-camel-case: true
+
+#Actuator配置
+management:
+  server:
+    port: 9001                       #访问端口
+  endpoints:
+    web:
+      exposure:
+        include: "*"                 #访问接口，默认是info、health 参考https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html
+      base-path: /actuator           #基础路径 即访问路径为：http://localhost:9001/actuator
+  endpoint:
+    health:
+      show-details: always
