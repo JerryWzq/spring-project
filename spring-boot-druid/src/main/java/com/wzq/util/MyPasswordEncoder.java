@@ -3,8 +3,7 @@ package com.wzq.util;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- *
- * @Authod
+ * @author
  */
 public class MyPasswordEncoder implements PasswordEncoder {
     @Override

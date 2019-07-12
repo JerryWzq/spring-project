@@ -6,6 +6,12 @@ import java.util.List;
 
 public class ListUtils {
 
+    /**
+     * 从集合中取出和为target的几个数
+     * @param keys
+     * @param target
+     * @return
+     */
     public static List<Long> getNewList(List<Long> keys, long target) {
         int n = keys.size();
         int nbit = 1 << n;
