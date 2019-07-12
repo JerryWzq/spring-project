@@ -1,8 +1,7 @@
 #!/bin/sh
 
-APP_NAME=ts-mock
-APP_HOME=/app/systems/ts-mock
-JAR_NAME=ts-mock-pro.jar
+APP_HOME=/app/systems/spring-boot-druid
+JAR_NAME=spring-boot-druid.jar
 cd $APP_HOME
 
 rm -f tpid

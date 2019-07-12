@@ -1,6 +1,6 @@
 #!/bin/sh
 
-APP_NAME=ts-mock-pro
+APP_NAME=spring-boot-druid
 
 tpid=`ps -ef|grep $APP_NAME|grep -v grep|grep -v kill|awk '{print $2}'`
 
