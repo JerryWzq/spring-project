@@ -2,6 +2,7 @@ package com.wzq;
 
 import com.wzq.util.ListUtils;
 import lombok.Data;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 
 import java.util.*;
@@ -50,10 +51,20 @@ public class SpringBootTest {
         list.add(9L);
         list.add(13L);
 
-        List<Long> newList = ListUtils.getNewList(list, 8L);
-        System.err.println(newList);
+        remove(list);
+        System.err.println(list);
+//        System.err.println(list.get(0));
+//
+//        List<Long> newList = ListUtils.getNewList(list, 8L);
+//        System.err.println(newList);
+//
+//        System.err.println(1L << 5000);
+    }
 
-        System.err.println(1L << 5000);
+    private void remove(List<Long> list){
+        List<Long> list1 = new ArrayList<>();
+        list1.addAll(list);
+        list1.remove(5L);
     }
 
     @Test
@@ -78,7 +89,7 @@ public class SpringBootTest {
         System.err.println(data);
 
         //按value顺序
-        data =   data.entrySet().stream()
+        data = data.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue())
                 .collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue(), (x1, x2) -> x2, LinkedHashMap::new));
         System.err.println(data);
@@ -106,6 +117,17 @@ public class SpringBootTest {
         Map<Integer, Set<String>> personToMap = personList.stream().collect(Collectors.groupingBy(Person::getAge, Collectors.mapping(Person::getName, Collectors.toSet())));
         System.err.println(personToMap);
         System.err.println(personToMap.values());
+
+        Set<String> datas = new HashSet<>();
+        personToMap.forEach((k, v) ->
+            datas.addAll(v)
+        );
+        System.err.println(">>>>>>>" + datas);
+    }
+
+    @Test
+    public void test05(){
+        System.err.println(RandomUtils.nextInt(0, 4));
     }
 
 }
