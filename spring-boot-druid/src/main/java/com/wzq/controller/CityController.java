@@ -1,5 +1,7 @@
 package com.wzq.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wzq.model.City;
 import com.wzq.service.CityService;
 import io.swagger.annotations.Api;
@@ -21,8 +23,11 @@ public class CityController {
 
     @ApiOperation(value = "查询城市" ,  notes="获取所有城市信息")
     @GetMapping("/getAll")
-    public List<City> getAllData(){
-        return service.getAllCityData();
+    public Object getAllData(){
+        PageHelper.startPage(1, 10);
+        List<City> cities = service.getAllCityData();
+        PageInfo<City> pageInfo = new PageInfo<>(cities);
+        return pageInfo;
     }
 
 
