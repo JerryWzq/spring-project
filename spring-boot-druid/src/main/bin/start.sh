@@ -1,13 +1,30 @@
-#!/bin/sh
+#!/bin/bash
+JAVA_VERSION=`java -version 2>&1 |awk 'NR==1{ gsub(/"/,""); print $3 }'`
+if  [[ $JAVA_VERSION != 1.8* ]]  ;then
+ echo '当前程序只支持jdk1.8,或者指定jdk 1.8路径(java_cmd)';
+fi
 
-APP_HOME=/app/systems/spring-boot-druid
-JAR_NAME=spring-boot-druid.jar
-cd $APP_HOME
+java_cmd=java
 
-rm -f tpid
+export HOME=$(cd `dirname $0`/../; pwd)
 
-nohup $JAVA_HOME/bin/java -Xms2G -Xmx2G -XX:MaxNewSize=1G -XX:-OmitStackTraceInFastThrow -Dspring.config.location=$APP_HOME/config/application.properties -XX:+UseConcMarkSweepGC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+HeapDumpOnOutOfMemoryError -verbose:gc -Xloggc:logs/gc.log -jar $APP_HOME/apps/$JAR_NAME --logging.config=$APP_HOME/config/logback.xml >$APP_HOME/server.out 2>&1 &
+APP_HOME=/app/systems/project
 
-echo $! > tpid
+deploy_file_name=spring-boot-druid.jar
+
+nohup $java_cmd  \
+          -Xms2G \
+          -Xmx4G \
+          -XX:MaxNewSize=2G \
+          -Xdebug \
+          -XX:+UseConcMarkSweepGC \
+          -XX:+HeapDumpOnOutOfMemoryError  -jar \
+          -XX:+PrintGCDetails \
+          -XX:+UseConcMarkSweepGC \
+          -verbose:gc -Xloggc:logs/gc.log \
+          -Dspring.config.location=$APP_HOME/config/application.properties \
+          -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9999 \
+          --logging.config=$APP_HOME/config/logback.xml \
+          $HOME/apps/$deploy_file_name   > $HOME/server.out 2>&1 &
 
 echo Start Success!
