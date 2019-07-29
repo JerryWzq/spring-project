@@ -36,6 +36,7 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        System.err.println("=====channelActive=====");
         String msg = "hello Server!";
         ByteBuf encoded = ctx.alloc().buffer(4 * msg.length());
         encoded.writeBytes(msg.getBytes());
@@ -50,19 +51,23 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
         byte[] result1 = new byte[result.readableBytes()];
         result.readBytes(result1);
         System.err.println("Server said:" + new String(result1));
-        result.release();
+        ReferenceCountUtil.release(result);
+
+        //write data to server
+        ByteBuf resp = ctx.alloc().buffer(1024);
+        resp.writeBytes("client channelRead!".getBytes());
+        ctx.writeAndFlush(resp);
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         System.err.println("=====channelReadComplete=====");
-        ctx.flush();
+//        ctx.flush();
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         System.err.println("=====channelRegistered=====");
-        ctx.writeAndFlush(">>>>>client channelRegistered<<<<<");
     }
 
     @Override

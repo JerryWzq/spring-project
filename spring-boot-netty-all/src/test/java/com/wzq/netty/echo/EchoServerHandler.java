@@ -57,7 +57,6 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         System.err.println("=====channelRegistered=====");
-        ctx.writeAndFlush(">>>>>server channelRegistered<<<<<");
     }
 
     @Override
@@ -68,7 +67,9 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.err.println("=====channelActive=====");
-        ctx.writeAndFlush(">>>>>server channelActive<<<<<");
+        ByteBuf buffer = ctx.alloc().buffer(1024);
+        buffer.writeBytes("Server channelActive!".getBytes());
+        ctx.writeAndFlush(buffer);
     }
 
     @Override
@@ -79,7 +80,6 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         System.err.println("=====channelReadComplete=====");
-        ctx.flush();
     }
 
     @Override
