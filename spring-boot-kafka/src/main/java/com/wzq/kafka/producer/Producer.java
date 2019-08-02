@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -26,8 +27,20 @@ public class Producer extends Thread {
 
     public Producer(String topic, Boolean isAsync) {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.KAFKA_SERVER_URL + ":" + KafkaProperties.KAFKA_SERVER_PORT);
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, "DemoProducer");
+        String servers = "120.79.8.31:9092,120.79.8.31:9093,120.79.8.31:9094";
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
+        props.put(ProducerConfig.ACKS_CONFIG, "all");
+        props.put(ProducerConfig.RETRIES_CONFIG, 10);
+        props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 10000);
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
+        props.put(ProducerConfig.LINGER_MS_CONFIG, 50);
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+        props.put(ProducerConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 3600000);
+        props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000);
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 2097152);
+        props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG,"gzip");
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION,"5");
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, KafkaProperties.CLIENT_ID);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         producer = new KafkaProducer<>(props);
@@ -57,6 +70,11 @@ public class Producer extends Thread {
                 }
             }
             ++messageNo;
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
@@ -90,7 +108,9 @@ class DemoCallBack implements Callback {
                 "message(" + key + ", " + message + ") sent to partition(" + metadata.partition() +
                     "), " +
                     "offset(" + metadata.offset() + ") in " + elapsedTime + " ms");
-        } else {
+        }
+
+        if(exception != null){
             logger.error("send data to kafka error", exception);
         }
     }
