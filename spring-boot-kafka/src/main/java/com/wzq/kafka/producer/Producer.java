@@ -1,6 +1,8 @@
 package com.wzq.kafka.producer;
 
 import com.wzq.kafka.consumer.KafkaProperties;
+import com.wzq.kafka.entity.KafkaTopicBean;
+import com.wzq.kafka.util.KafkaClientUtil;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -11,6 +13,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -25,10 +28,11 @@ public class Producer extends Thread {
     private final String topic;
     private final Boolean isAsync;
 
+    private KafkaClientUtil kafkaClientUtil;
+
     public Producer(String topic, Boolean isAsync) {
         Properties props = new Properties();
-        String servers = "120.79.8.31:9092,120.79.8.31:9093,120.79.8.31:9094";
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, servers);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KafkaProperties.KAFKA_SERVER);
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.RETRIES_CONFIG, 10);
         props.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 10000);
@@ -46,22 +50,43 @@ public class Producer extends Thread {
         producer = new KafkaProducer<>(props);
         this.topic = topic;
         this.isAsync = isAsync;
+
+//        kafkaClientUtil = new KafkaClientUtil(KafkaProperties.KAFKA_SERVER);
+//        createTopicIfNotExist();
+    }
+
+    void createTopicIfNotExist(){
+        boolean existTopic = kafkaClientUtil.existTopic(topic);
+        if(!existTopic){
+            logger.info("Producer create topic: {}", topic);
+            KafkaTopicBean kafkaTopicBean = new KafkaTopicBean();
+            kafkaTopicBean.setTopicName(topic);
+            kafkaTopicBean.setPartition(KafkaProperties.PARTITION);
+            kafkaTopicBean.setReplication(KafkaProperties.REPLICATION);
+            kafkaClientUtil.createTopic(Arrays.asList(kafkaTopicBean));
+        }
     }
 
     @Override
     public void run() {
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         int messageNo = 1;
         while (true) {
             String messageStr = "Message_" + messageNo;
             long startTime = System.currentTimeMillis();
+            Integer partition = messageNo % KafkaProperties.PARTITION;
             // Send asynchronously
             if (isAsync) {
-                producer.send(new ProducerRecord<>(topic,
+                producer.send(new ProducerRecord<>(topic, partition,
                     messageNo,
                     messageStr), new DemoCallBack(startTime, messageNo, messageStr));
             } else { // Send synchronously
                 try {
-                    producer.send(new ProducerRecord<>(topic,
+                    producer.send(new ProducerRecord<>(topic, partition,
                         messageNo,
                         messageStr)).get();
                     System.out.println("Sent message: (" + messageNo + ", " + messageStr + ")");
@@ -111,7 +136,7 @@ class DemoCallBack implements Callback {
         }
 
         if(exception != null){
-            logger.error("send data to kafka error", exception);
+            logger.error("send data to kafka error, {}", exception.getMessage(), exception);
         }
     }
 }
