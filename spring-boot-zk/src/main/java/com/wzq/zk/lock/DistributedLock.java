@@ -12,13 +12,22 @@ import java.util.concurrent.TimeUnit;
 /**
  * classname：DistributedLock
  * desc：基于zookeeper的开源客户端Cruator实现分布式锁
- * author：simonsfan
+ * author:
  */
 public class DistributedLock {
     public static Logger log = LoggerFactory.getLogger(DistributedLock.class);
-    private InterProcessMutex interProcessMutex;  //可重入排它锁
-    private String lockName;  //竞争资源标志
-    private String root = "/distributed/lock/";//根节点
+    /**
+     * 可重入排它锁
+     */
+    private InterProcessMutex interProcessMutex;
+    /**
+     * 竞争资源标志
+     */
+    private String lockName;
+    /**
+     * 根节点
+     */
+    private String root = "/distributed/lock/";
     private static CuratorFramework curatorFramework;
     private static String ZK_URL = "zookeeper1.tq.master.cn:2181,zookeeper3.tq.master.cn:2181,zookeeper2.tq.master.cn:2181,zookeeper4.tq.master.cn:2181,zookeeper5.tq.master.cn:2181";
     static{
@@ -48,7 +57,8 @@ public class DistributedLock {
             //重试2次，每次最大等待2s，也就是最大等待4s
             while (!interProcessMutex.acquire(2, TimeUnit.SECONDS)){
                 flag++;
-                if(flag>1){  //重试两次
+                //重试两次
+                if(flag>1){
                     break;
                 }
             }
@@ -56,7 +66,7 @@ public class DistributedLock {
            log.error("distributed lock acquire exception="+e);
         }
          if(flag>1){
-              log.info("Thread:"+Thread.currentThread().getId()+" acquire distributed lock  busy");
+             log.info("Thread:"+Thread.currentThread().getId()+" acquire distributed lock  busy");
          }else{
              log.info("Thread:"+Thread.currentThread().getId()+" acquire distributed lock  success");
          }
