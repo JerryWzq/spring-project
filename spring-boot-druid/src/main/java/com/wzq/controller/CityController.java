@@ -6,10 +6,10 @@ import com.wzq.model.City;
 import com.wzq.service.CityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/city")
 public class CityController {
+
+    private static final Logger logger = LoggerFactory.getLogger(CityController.class);
 
     @Autowired
     private CityService service;
@@ -28,6 +30,18 @@ public class CityController {
         List<City> cities = service.getAllCityData();
         PageInfo<City> pageInfo = new PageInfo<>(cities);
         return pageInfo;
+    }
+
+    @GetMapping("/hello")
+    public Object hello(@RequestParam String name){
+        logger.info("hello request: {}", name);
+        return name;
+    }
+
+    @PostMapping("/{id}")
+    public Object getCityById(@PathVariable  Integer id){
+        logger.info("get city info, id: {}", id);
+        return service.getCityById(id);
     }
 
 

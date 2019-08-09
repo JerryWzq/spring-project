@@ -17,4 +17,8 @@ public class CityService {
         return cityMapper.getAllCity();
     }
 
+    public City getCityById(Integer id){
+        return cityMapper.getCityById(id);
+    }
+
 }

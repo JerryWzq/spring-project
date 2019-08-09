@@ -14,4 +14,8 @@
         select * from city
     </select>
 
+    <select id="getCityById" resultMap="selectByPrimaryKeyMap">
+        select * from city where id = #{id}
+    </select>
+
 </mapper>
