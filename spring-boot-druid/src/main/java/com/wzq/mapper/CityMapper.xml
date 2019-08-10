@@ -6,7 +6,7 @@
     <resultMap id="selectByPrimaryKeyMap" type="com.wzq.model.City">
         <result column="id" property="id"/>
         <result column="city_name" property="cityName"/>
-        <result column="p_id" property="pId"/>
+        <result column="p_id" property="pid"/>
         <result column="size" property="size"/>
     </resultMap>
 
@@ -17,5 +17,12 @@
     <select id="getCityById" resultMap="selectByPrimaryKeyMap">
         select * from city where id = #{id}
     </select>
+
+    <insert id="insert">
+        insert into city
+            (city_name, p_id, size)
+            values
+            (#{city.cityName}, #{city.pid}, #{city.size})
+    </insert>
 
 </mapper>

@@ -1,5 +1,9 @@
 package com.wzq;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wzq.model.City;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +21,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.servlet.http.Cookie;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -56,6 +63,55 @@ public class SpringBootDruidApplicationTests {
                     .andDo(MockMvcResultHandlers.print());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testPostJSON(){
+        try {
+            String data = "{\n" +
+                    "\t\"cityName\": \"上海\",\n" +
+                    "\t\"pid\": 1,\n" +
+                    "\t\"size\": \"SMALL\"\n" +
+                    "}";
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/city/insert").contentType("application/json").content(data.getBytes()))
+                    .andDo(MockMvcResultHandlers.print());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @Transactional
+    public void testPostJSON01(){
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            City city = new City();
+            city.setPid(1L);
+            city.setCityName("上海");
+            city.setSize("SMALL");
+            byte[] valueAsBytes = objectMapper.writeValueAsBytes(city);
+
+            mockMvc.perform(MockMvcRequestBuilders.post("/city/insert").contentType("application/json").content(valueAsBytes))
+                    .andDo(MockMvcResultHandlers.print());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testSessionAndCookie(){
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("/city/echo").sessionAttr("root", "admin")).
+                    andDo(MockMvcResultHandlers.print());
+            mockMvc.perform(MockMvcRequestBuilders.get("/city/echo").cookie(new Cookie("root", "root")))
+                    .andDo(MockMvcResultHandlers.print());
+        }catch (Exception e){
+
         }
     }
 

@@ -7,7 +7,7 @@ public class City {
 
     private Long id;
     private String cityName;
-    private Long pId;
+    private Long pid;
     private String size;
 
 }

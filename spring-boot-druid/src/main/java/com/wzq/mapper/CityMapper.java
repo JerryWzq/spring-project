@@ -13,4 +13,6 @@ public interface CityMapper {
 
     City getCityById(@Param("id") Integer id);
 
+    Integer insert(@Param("city") City city);
+
 }

@@ -44,5 +44,15 @@ public class CityController {
         return service.getCityById(id);
     }
 
+    @PostMapping("/insert")
+    public Object insert(@RequestBody City city){
+        logger.info("insert city: {}", city);
+        return service.insert(city);
+    }
+
+    @GetMapping("/echo")
+    public Object echo(){
+        return "echo request";
+    }
 
 }

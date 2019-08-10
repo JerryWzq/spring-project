@@ -21,4 +21,7 @@ public class CityService {
         return cityMapper.getCityById(id);
     }
 
+    public Integer insert(City city){
+        return cityMapper.insert(city);
+    }
 }
