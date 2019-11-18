@@ -1,8 +1,10 @@
 spring:
+  application:
+    name: spring-boot2
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     #MySQL JDBC驱动程序的5.1.33版本 url必须加上serverTimezone=UTC，否则会报错，连接不上数据库
-    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.96.175:3306/test?characterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
   # thymeleaf
@@ -59,3 +61,7 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
+
+nacos:
+  config:
+    server-addr: 192.168.96.175:8848

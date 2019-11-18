@@ -114,6 +114,12 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.46</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.boot</groupId>
+            <artifactId>nacos-config-spring-boot-starter</artifactId>
+            <version>0.2.1</version>
+        </dependency>
     </dependencies>
 
     <build>
