@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- oracle的jar包文件路径 *重点:不要写错 -->
+<!--    <classPathEntry location="D:\repository\mysql\mysql-connector-java\8.0.16\mysql-connector-java-8.0.16.jar"/>-->
+    <context id="test" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否取消注释 -->
+            <property name="suppressDate" value="true"/>
+            <!-- 是否生成注释代时间戳-->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+        <!-- 链接配置 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.96.175:3306/test" userId="root"
+                        password="123456">
+        </jdbcConnection>
+        <javaTypeResolver>
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+        <!--model路径 *targetProject重点:不要写错目录(下面的也是)-->
+        <javaModelGenerator targetPackage="com.wzq.test.model" targetProject="./src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <!-- 从数据库返回的值被清理前后的空格  -->
+            <property name="trimStrings" value="false"/>
+        </javaModelGenerator>
+        <!--mapper接口路径-->
+        <sqlMapGenerator targetPackage="com.wzq.test.mapper" targetProject="./src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!--mapper.xml路径-->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.wzq.test.mapper" targetProject="./src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <!--domainObjectName 实体类名 tableName 要自动生成的表名 enable* 需要什么开启什么为true否为false -->
+        <table domainObjectName="City" tableName="city" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false" enableDeleteByPrimaryKey="false" enableUpdateByPrimaryKey="false" enableSelectByPrimaryKey="false">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
