@@ -66,6 +66,11 @@
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>2.0.0</version>
                 <configuration>
+                    <!-- <fromDir>和<includes>使用命令 clean package wagon:upload wagon:sshexec -->
+<!--                    <fromDir>target/</fromDir>-->
+<!--                    &lt;!&ndash;上传哪些包 &ndash;&gt;-->
+<!--                    <includes>spring-scp.jar</includes>-->
+                    <!-- 运行命令 clean package wagon:upload-single wagon:sshexec -->
                     <fromFile>target/${project.name}.jar</fromFile>
                     <url><![CDATA[scp://${remote-user}:${remote-pwd}@${remote-url}${remote-path}]]></url>
                     <commands>
@@ -76,7 +81,6 @@
                         <command><![CDATA[netstat -nptl]]></command>
                         <command><![CDATA[ps -ef | grep java | grep -v grep]]></command>
                     </commands>
-                    <!-- 运行命令 clean package wagon:upload-single wagon:sshexec -->
                     <displayCommandOutputs>true</displayCommandOutputs>
                 </configuration>
             </plugin>
