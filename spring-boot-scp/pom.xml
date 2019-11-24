@@ -20,7 +20,7 @@
         <remote-user>root</remote-user>
         <remote-pwd>123456</remote-pwd>
         <remote-url>192.168.96.175</remote-url>
-        <remote-path>/app</remote-path>
+        <remote-path>/app/test</remote-path>
     </properties>
 
     <dependencies>
@@ -68,18 +68,13 @@
                 <configuration>
                     <!-- <fromDir>和<includes>使用命令 clean package wagon:upload wagon:sshexec -->
 <!--                    <fromDir>target/</fromDir>-->
-<!--                    &lt;!&ndash;上传哪些包 &ndash;&gt;-->
+                    <!--上传哪些包 -->
 <!--                    <includes>spring-scp.jar</includes>-->
                     <!-- 运行命令 clean package wagon:upload-single wagon:sshexec -->
                     <fromFile>target/${project.name}.jar</fromFile>
                     <url><![CDATA[scp://${remote-user}:${remote-pwd}@${remote-url}${remote-path}]]></url>
                     <commands>
-                        <command>pkill -f ${project.name}.jar</command>
-                        <command>rm -f ${remote-path}/${project-name}.log</command>
-                        <command>
-                            <![CDATA[nohup java -jar ${remote-path}/${project-name} > ${remote-path}/${project-name}.log 2>&1 & ]]></command>
-                        <command><![CDATA[netstat -nptl]]></command>
-                        <command><![CDATA[ps -ef | grep java | grep -v grep]]></command>
+                        <command><![CDATA[sh /app/test/start.sh]]></command>
                     </commands>
                     <displayCommandOutputs>true</displayCommandOutputs>
                 </configuration>
